@@ -4,7 +4,7 @@
 
 require_relative "../.../lib/prawn_doc"
 
-PrawnDoc::Example.generate("test.pdf") do
-  text "HOWDY THERE PrawnDoc!!!!!", :size => 36, :color => "0000ff"
+Prawn::ManualBuilder::Example.generate("test.pdf") do
+  text "HOWDY THERE Prawn::ManualBuilder!!!!!", :size => 36, :color => "0000ff"
 end
 
