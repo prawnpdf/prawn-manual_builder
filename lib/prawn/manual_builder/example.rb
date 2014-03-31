@@ -1,7 +1,7 @@
 module Prawn
   module ManualBuilder
-    # The Prawn::Example class holds all the helper methods used to generate the
-    # Prawn by example manual.
+    # The Prawn::ManualBuilder::Example class holds all the helper methods 
+    # used to generate manuals.
     #
     # The overall structure is to have single example files grouped by package
     # folders. Each package has a package builder file (with the same name as the
@@ -16,7 +16,7 @@ module Prawn
     #
     # To see how the manual is built check manual/manual/manual.rb (Yes that's a
     # whole load of manuals)
-    class Example < Prawn::Document
+    class Example < Prawn::ManualBuilder.document_class
 
       # Values used for the manual design:
 

@@ -2,8 +2,8 @@
 
 module Prawn
   module ManualBuilder
-    # The Prawn::ExampleSection class is a utility class to handle sections
-    # of related examples within an ExamplePackage
+    # The Prawn::ManualBuilder::ExampleSection class is a utility class to 
+    # handle sections of related examples within an ExamplePackage
     #
     class ExampleSection
       attr_reader :name

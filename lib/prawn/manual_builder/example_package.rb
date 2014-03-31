@@ -2,9 +2,9 @@
 
 module Prawn
   module ManualBuilder  
-    # The Prawn::ExamplePackage class is a utility class to handle the packaging
-    # of individual examples within a hierarchy when building the manual
-    #
+    # The Prawn::ManualBuilder::ExamplePackage class is a utility class to 
+    # handle the packaging of individual examples within a hierarchy 
+    # when building the manual.
     class ExamplePackage
       attr_reader :intro_block, :folder_name
       

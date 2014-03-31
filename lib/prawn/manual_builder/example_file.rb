@@ -2,8 +2,9 @@
 
 module Prawn
   module ManualBuilder
-    # The Prawn::ExampleFile class is a utility class to ease the manipulation
-    # and extraction of source code and comments from the actual example files
+    # The Prawn::ManualBuilder ExampleFile class is a utility class to ease 
+    # the manipulation and extraction of source code and comments from the 
+    # actual example files
     #
     class ExampleFile
       attr_reader :package, :filename
