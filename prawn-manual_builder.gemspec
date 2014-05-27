@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = 'prawn-manual_builder'
-  spec.version = '0.0.1'
+  spec.version = '0.0.2'
   spec.platform = Gem::Platform::RUBY
   spec.summary = "A tool for writing manuals for Prawn and Prawn accessories"
   spec.description = "A tool for writing manuals for Prawn and Prawn accessories"

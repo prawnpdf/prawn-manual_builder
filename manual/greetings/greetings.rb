@@ -1,6 +1,6 @@
 # Intro hooray!
 
-require_relative "../../lib/prawn_doc"
+require_relative "../../lib/prawn/manual_builder"
 
 Prawn::ManualBuilder::Example.generate("greetings.pdf", :page_size => "FOLIO") do
   package "greetings" do |p|

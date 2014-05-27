@@ -58,8 +58,8 @@ module Prawn
 
       # Loads a page with outline support. Used on the manual.
       #
-      def load_page(page)
-        load_file("manual", page)
+      def load_page(package, page)
+        load_file(package, page)
 
         outline.define do
           section(page.gsub("_", " ").capitalize, :destination => page_number)
