@@ -1,5 +1,4 @@
 require "enumerator"
-require "prawn"
 
 module Prawn
   module ManualBuilder
@@ -30,5 +29,3 @@ require_relative "manual_builder/example_section"
 require_relative "manual_builder/example_package"
 require_relative "manual_builder/syntax_highlight"
 require_relative "manual_builder/example"
-
-
