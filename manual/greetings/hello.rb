@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+# encoding: UTF-8
+#
 # Intro hooray!
 # 
 # You better believe this is the best example ever.

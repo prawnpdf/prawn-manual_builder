@@ -65,7 +65,13 @@ module Prawn
       # Then removes the '#' signs, reflows the line breaks and return the result
       #
       def introduction_text
-        intro = @data.lines.grep(/^#/).join
+        intro = @data.lines.grep(/^#/)
+
+        intro.shift if intro.first =~ /^#!/
+        intro.shift if intro.first =~ /coding:/
+
+        intro = intro.join
+
         intro.gsub!(/\n# (?=\S)/m, ' ')
         intro.gsub!(/^#/, '')
         intro.gsub!("\n", "\n\n")
