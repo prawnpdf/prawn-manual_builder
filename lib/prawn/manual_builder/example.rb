@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module Prawn
   module ManualBuilder
     # The Prawn::ManualBuilder::Example class holds all the helper methods 
