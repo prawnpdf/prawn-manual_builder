@@ -7,6 +7,8 @@ module Prawn
     # when building the manual.
     class ExamplePackage
       attr_reader :intro_block, :folder_name
+
+      attr_writer :name
       
       def initialize(folder_name)
         @folder_name = folder_name
