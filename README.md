@@ -1,5 +1,7 @@
 # Prawn::ManualBuilder
 
+![Maintained: yes](https://img.shields.io/badge/maintained-yes-brightgreen.png)
+
 This library is used by Prawn to generate its self-documenting manual,
 and could be used by third-party Prawn extensions to create manuals
 for their functionality as well.
