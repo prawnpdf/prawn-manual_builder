@@ -1,13 +1,21 @@
-#!/usr/bin/env ruby
-# encoding: UTF-8
-#
-# Intro hooray!
-# 
-# You better believe this is the best example ever.
+# frozen_string_literal: true
 
-require_relative "../../prawn/manual_builder"
+require "prawn/manual_builder"
 
-Prawn::ManualBuilder::Example.generate("test.pdf") do
-  text "HOWDY THERE Prawn::ManualBuilder!!!!!", :size => 36, :color => "0000ff"
+Prawn::ManualBuilder::Chapter.new do
+  title "Hello"
+
+  text do
+    prose "HOWDY THERE Prawn::ManualBuilder!!!!!"#, :size => 36, :color => "0000ff"
+  end
+
+  example <<~CODE, eval: false, standalone: false
+      text "HOWDY THERE from #{self.class.name}!!!!!", :size => 36, :color => "0000ff"
+
+    bounding_box([100, 100], :width => 100, height: 100) do
+      stroke_bounds
+    end
+
+    # do some more stuff here
+  CODE
 end
-
