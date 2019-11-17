@@ -73,7 +73,7 @@ module Prawn
       def load_file(package, file)
         start_new_page
         example = ExampleFile.new(package, "#{file}.rb")
-        eval example.generate_block_source
+        eval example.generate_block_source, nil, File.join(Prawn::ManualBuilder.manual_dir, example.parent_folder_name, example.filename), example.generated_block_line
       end
 
 
@@ -129,7 +129,7 @@ module Prawn
         code(example.source)
 
         if example.eval?
-          eval_code(example.source)
+          eval_code(example)
         else
           source_link(example)
         end
@@ -212,7 +212,8 @@ module Prawn
 
       # Renders a dashed line and evaluates the code inline
       #
-      def eval_code(source)
+      def eval_code(example)
+        source = example.source
         move_down(RHYTHM)
 
         dash(3)
@@ -223,7 +224,7 @@ module Prawn
 
         move_down(RHYTHM*3)
         begin
-          eval(source)
+          eval source, nil, File.join(Prawn::ManualBuilder.manual_dir, example.parent_folder_name, example.filename), example.generated_block_line
         rescue => e
           puts "Error evaluating example: #{e.message}"
           puts

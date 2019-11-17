@@ -44,7 +44,15 @@ module Prawn
         
         block.gsub(/^( ){2}/, "")
       end
-      
+
+      def generated_block_line
+        pre_block = @data.slice(/.*\w+\.generate.*? do\n/m)
+
+        return 1 unless pre_block
+
+        pre_block.lines.length + 1
+      end
+
       # Return either the full_source or the generate_block_source according
       # to the options
       #
