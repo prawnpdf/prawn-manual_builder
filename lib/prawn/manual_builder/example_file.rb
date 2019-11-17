@@ -77,6 +77,7 @@ module Prawn
 
         intro.shift if intro.first =~ /^#!/
         intro.shift if intro.first =~ /coding:/
+        intro.shift if intro.first =~ /frozen_string_literal:/
 
         intro = intro.join
 
