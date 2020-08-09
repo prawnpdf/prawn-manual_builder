@@ -16,7 +16,6 @@ module Prawn
       raise "Prawn::ManualBuilder.document_class was not set. "+
             "Either assign a custom document class, or make sure to install "+
             "and require the Prawn gem."
-
     end
 
     DATADIR = File.dirname(__FILE__) + "/../../data"
