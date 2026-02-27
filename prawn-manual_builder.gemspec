@@ -10,6 +10,15 @@ Gem::Specification.new do |spec|
   spec.description = 'A tool for writing manuals for Prawn and Prawn accessories'
   spec.licenses = %w[Nonstandard GPL-2.0-only GPL-3.0-only]
 
+  spec.authors = ['Alexander Mankuta']
+  spec.email = ['alex@pointless.one']
+  spec.metadata = {
+    'rubygems_mfa_required' => 'true',
+    'homepage_uri' => spec.homepage,
+    'source_code_uri' => 'https://github.com/prawnpdf/prawn-manual_builder',
+    'bug_tracker_uri' => 'https://github.com/prawnpdf/prawn-manual_builder/issues',
+  }
+
   spec.files = Dir.glob('{data,lib}/**/*') +
     ['README.md', 'LICENSE', 'COPYING', 'GPLv2', 'GPLv3']
 
@@ -28,8 +37,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency('prism', '~> 1.0')
 
   spec.add_development_dependency('prawn-dev', '~> 0.6.0')
-
-  spec.authors = ['Alexander Mankuta']
-  spec.email = ['alex@pointless.one']
-  spec.metadata['rubygems_mfa_required'] = 'true'
 end
