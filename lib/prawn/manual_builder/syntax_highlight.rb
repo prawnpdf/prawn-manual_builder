@@ -77,9 +77,8 @@ module Prawn
                 .map(&:first) # Only tokens
 
             # Add a BOF token to be able to not miss the whitespace at the beginning
-            tokens.prepend(Prism::Token.new(:PRAWN_BOF, '', Prism::Location.new(result.source, 0, 0)))
+            tokens.prepend(Prism::Token.new(result.source, :PRAWN_BOF, '', Prism::Location.new(result.source, 0, 0)))
 
-            cursor = 0
             # Add whitespace tokens
             tokens
               # Tokens are not sequential. Specifically, heredoc body is out of order.
@@ -95,7 +94,7 @@ module Prawn
                   )
                   [
                     token,
-                    Prism::Token.new(:PRAWN_WHITESPACE, ws_location.slice, ws_location)
+                    Prism::Token.new(result.source, :PRAWN_WHITESPACE, ws_location.slice, ws_location)
                   ]
               else
                   [token]
