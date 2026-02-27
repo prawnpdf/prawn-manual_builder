@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.platform = Gem::Platform::RUBY
   spec.summary = 'A tool for writing manuals for Prawn and Prawn accessories'
   spec.description = 'A tool for writing manuals for Prawn and Prawn accessories'
-  spec.licenses = %w[PRAWN GPL-2.0 GPL-3.0]
+  spec.licenses = %w[Nonstandard GPL-2.0-only GPL-3.0-only]
 
   spec.files = Dir.glob('{data,lib}/**/*') +
     ['README.md', 'LICENSE', 'COPYING', 'GPLv2', 'GPLv3']
