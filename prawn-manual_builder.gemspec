@@ -13,6 +13,16 @@ Gem::Specification.new do |spec|
   spec.files = Dir.glob('{data,lib}/**/*') +
     ['README.md', 'LICENSE', 'COPYING', 'GPLv2', 'GPLv3']
 
+  if File.basename($PROGRAM_NAME) == 'gem' && ARGV.include?('build')
+    signing_key = File.expand_path('~/.gem/gem-private_key.pem')
+    if File.exist?(signing_key)
+      spec.cert_chain = ['certs/pointlessone.pem']
+      spec.signing_key = signing_key
+    else
+      warn 'WARNING: Signing key is missing. The gem is not signed and its authenticity can not be verified.'
+    end
+  end
+
   spec.required_ruby_version = '>= 2.7'
   spec.add_dependency('prawn', '~> 2.4.0')
   spec.add_dependency('prism', '~> 1.0')
