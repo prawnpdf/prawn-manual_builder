@@ -8,7 +8,8 @@ module Prawn
         @content = []
       end
 
-      attr_reader :title, :content
+      attr_reader :title
+      attr_reader :content
 
       def render(doc)
         # Do nothing

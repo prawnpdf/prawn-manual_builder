@@ -7,23 +7,22 @@ require_relative 'text_renderer'
 module Prawn
   module ManualBuilder
     class Peritext < Part
-
       def initialize(&block)
         super
 
         if block
           instance_eval(&block)
         else
-          warn "Peritext defined in #{__FILE__} has no content"
+          warn("Peritext defined in #{__FILE__} has no content")
         end
       end
 
       # DSL
       def text(&block)
-        if !block_given?
-          @text
-        else
+        if block_given?
           @text = block
+        else
+          @text
         end
       end
 

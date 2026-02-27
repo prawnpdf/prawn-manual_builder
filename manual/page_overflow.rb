@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "prawn/manual_builder"
+require 'prawn/manual_builder'
 
 Prawn::ManualBuilder::Chapter.new do
-  title "Long example"
+  title 'Long example'
 
   text do
     list(*(['List item'] * 20))
@@ -23,7 +23,7 @@ Prawn::ManualBuilder::Chapter.new do
 
 
 
-    text "Hi!"
+    text 'Hi!'
     start_new_page
 
 
@@ -32,7 +32,7 @@ Prawn::ManualBuilder::Chapter.new do
 
 
 
-    text "Hello!"
+    text 'Hello!'
     start_new_page
 
 

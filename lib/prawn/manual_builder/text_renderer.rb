@@ -18,17 +18,19 @@ module Prawn
 
       private
 
-      attr_reader :doc, :text
+      attr_reader :doc
+      attr_reader :text
 
       def header(str)
         doc.font(HEADER_FONT, size: HEADER_FONT_SIZE) do
           str.split(/\n\n+/).each do |paragraph|
             doc.text(
-              paragraph.gsub(/\s+/," "),
+              paragraph.gsub(/\s+/, ' '),
               align: :justify,
               inline_format: true,
               leading: LEADING,
-              color: DARK_GRAY)
+              color: DARK_GRAY,
+            )
 
             doc.move_down(RHYTHM)
           end
@@ -47,27 +49,30 @@ module Prawn
         doc.bounding_box(
           [-doc.bounds.absolute_left, doc.cursor + PAGE_MARGIN],
           width: doc.bounds.absolute_left + doc.bounds.absolute_right,
-          height: PAGE_MARGIN * 2 + text_height
+          height: (PAGE_MARGIN * 2) + text_height,
         ) do
           doc.fill_color(LIGHT_GRAY)
           doc.fill_rectangle(
             [doc.bounds.left, doc.bounds.top],
             doc.bounds.right,
-            doc.bounds.top - doc.bounds.bottom
+            doc.bounds.top - doc.bounds.bottom,
           )
           doc.fill_color(BLACK)
 
           doc.bounding_box(
             [PAGE_MARGIN + INNER_MARGIN, doc.bounds.top - PAGE_MARGIN],
-            width: doc.bounds.width - PAGE_MARGIN * 2 - INNER_MARGIN * 2,
-            height: text_height
+            width: doc.bounds.width - (PAGE_MARGIN * 2) - (INNER_MARGIN * 2),
+            height: text_height,
           ) do
             doc.formatted_text(header_text, header_options)
           end
         end
 
         doc.stroke_color(GRAY)
-        doc.stroke_horizontal_line(-doc.bounds.absolute_left, doc.bounds.width + doc.bounds.absolute_right, at: doc.cursor)
+        doc.stroke_horizontal_line(
+          -doc.bounds.absolute_left, doc.bounds.width + doc.bounds.absolute_right,
+          at: doc.cursor,
+        )
         doc.stroke_color(BLACK)
 
         doc.move_down(RHYTHM * 3)
@@ -77,11 +82,12 @@ module Prawn
         doc.font(TEXT_FONT, size: TEXT_FONT_SIZE) do
           extra_markup(str).split(/\n\n+/).each do |paragraph|
             doc.text(
-              paragraph.gsub(/\s+/," "),
+              paragraph.gsub(/\s+/, ' '),
               align: :justify,
               inline_format: true,
               leading: LEADING,
-              color: DARK_GRAY)
+              color: DARK_GRAY,
+            )
 
             doc.move_down(RHYTHM)
           end
@@ -93,7 +99,7 @@ module Prawn
       def list(*items)
         doc.move_up(RHYTHM)
 
-        doc.font("DejaVu", size: 11) do
+        doc.font('DejaVu', size: 11) do
           items.each do |li|
             doc.float { doc.text("\u2022", size: doc.font_size * 1.25) }
             doc.indent(RHYTHM) do
@@ -101,7 +107,7 @@ module Prawn
                 extra_markup(li).gsub(/\s+/, ' '),
                 inline_format: true,
                 color: DARK_GRAY,
-                leading: LEADING
+                leading: LEADING,
               )
             end
 
@@ -115,7 +121,7 @@ module Prawn
       def ordered_list(*items)
         doc.move_up(RHYTHM)
 
-        doc.font("DejaVu", size: 11) do
+        doc.font('DejaVu', size: 11) do
           counter_width = (1..items.size).to_a.map { |i| doc.width_of("#{i}.") }.max
           space_width = doc.width_of(' ')
           items.each_with_index do |li, i|
@@ -129,7 +135,7 @@ module Prawn
                 extra_markup(li).gsub(/\s+/, ' '),
                 inline_format: true,
                 color: DARK_GRAY,
-                leading: LEADING
+                leading: LEADING,
               )
             end
 
@@ -142,9 +148,10 @@ module Prawn
 
       def extra_markup(str)
         str
-          .gsub(/<code>([^<]+?)<\/code>/, '<font name="Iosevka"><b>\1</b></font>') # Process the <code> tags
-          .gsub(URI::Parser.new.make_regexp(%w[http https])) do |match|
-            %(<color rgb="#{BLUE}"><link href="#{match}">#{match.gsub('/', "/#{Prawn::Text::ZWSP}")}</link></color>) # Process the links
+          .gsub(%r{<code>([^<]+?)</code>}, '<font name="Iosevka"><b>\1</b></font>') # Process the <code> tags
+          .gsub(URI::RFC2396_PARSER.make_regexp(%w[http https])) do |match|
+            # Process the links
+            %(<color rgb="#{BLUE}"><link href="#{match}">#{match.gsub('/', "/#{Prawn::Text::ZWSP}")}</link></color>)
           end
       end
     end

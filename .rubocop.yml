@@ -1,0 +1,19 @@
+inherit_gem:
+  prawn-dev: rubocop.yml
+
+Layout/EmptyLines:
+  Exclude:
+    - manual/long_example.rb
+    - manual/page_overflow.rb
+
+Metrics/BlockLength:
+  Enabled: false
+  Exclude:
+    - manual/greetings/greetings.rb
+    - lib/prawn/manual_builder/manual.rb
+
+Style/DocumentationMethod:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false

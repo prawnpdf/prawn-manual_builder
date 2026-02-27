@@ -19,47 +19,47 @@ module Prawn
         instance_eval(&block) if block
       end
 
-      attr_reader :root_path, :content
+      attr_reader :root_path
+      attr_reader :content
 
       def generate(filename = nil)
-        doc = Prawn::Document.new({ skip_page_creation: true, margin: PAGE_MARGIN }.merge(@document_options)) do
-          jigmo_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/Jigmo.ttf"
-          jigmo2_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/Jigmo2.ttf"
-          jigmo3_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/Jigmo3.ttf"
-          dejavu_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/DejaVuSans.ttf"
-          dejavu_bold_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/DejaVuSans-Bold.ttf"
-          dejavu_italic_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/DejaVuSans-Oblique.ttf"
-          dejavu_bold_italic_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/DejaVuSans-BoldOblique.ttf"
-          iosevka_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/iosevka-po-regular.ttf"
-          iosevka_bold_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/iosevka-po-bold.ttf"
-          font_families.update(
-            'Jigmo' => { normal: jigmo_file },
-            'Jigmo2' => { normal: jigmo2_file },
-            'Jigmo3' => { normal: jigmo3_file },
-            'DejaVu' => {
-              normal: dejavu_file,
-              bold: dejavu_bold_file,
-              italic: dejavu_italic_file,
-              bold_italic: dejavu_bold_italic_file,
-            },
-            'Iosevka' => {
-              normal: iosevka_file,
-              bold: iosevka_bold_file,
-            }
-          )
+        doc =
+          Prawn::Document.new({ skip_page_creation: true, margin: PAGE_MARGIN }.merge(@document_options)) do
+            jigmo_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/Jigmo.ttf"
+            jigmo2_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/Jigmo2.ttf"
+            jigmo3_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/Jigmo3.ttf"
+            dejavu_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/DejaVuSans.ttf"
+            dejavu_bold_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/DejaVuSans-Bold.ttf"
+            dejavu_italic_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/DejaVuSans-Oblique.ttf"
+            dejavu_bold_italic_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/DejaVuSans-BoldOblique.ttf"
+            iosevka_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/iosevka-po-regular.ttf"
+            iosevka_bold_file = "#{Prawn::ManualBuilder::DATADIR}/fonts/iosevka-po-bold.ttf"
+            font_families.update(
+              'Jigmo' => { normal: jigmo_file },
+              'Jigmo2' => { normal: jigmo2_file },
+              'Jigmo3' => { normal: jigmo3_file },
+              'DejaVu' => {
+                normal: dejavu_file,
+                bold: dejavu_bold_file,
+                italic: dejavu_italic_file,
+                bold_italic: dejavu_bold_italic_file,
+              },
+              'Iosevka' => {
+                normal: iosevka_file,
+                bold: iosevka_bold_file,
+              },
+            )
 
-          class << self
-            attr_accessor :new_page_callback
+            class << self
+              attr_accessor :new_page_callback
 
-            def start_new_page(options = {})
-              super
+              def start_new_page(options = {})
+                super
 
-              if new_page_callback
-                new_page_callback.call(self)
+                new_page_callback&.call(self)
               end
             end
           end
-        end
 
         render_content(doc)
         build_outline(doc)
@@ -69,10 +69,6 @@ module Prawn
           doc.render
         end
       end
-
-      protected
-
-      attr_reader :content
 
       private
 
@@ -109,7 +105,7 @@ module Prawn
       def load_part(relative_path)
         part_path = File.join(root_path, "#{relative_path}.rb")
         if File.exist?(part_path)
-          part = eval(File.read(part_path), TOPLEVEL_BINDING, part_path)
+          part = TOPLEVEL_BINDING.eval(File.read(part_path), part_path)
           if part.is_a?(Part)
             part.auto_render = false
             part.path = part_path

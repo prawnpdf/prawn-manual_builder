@@ -14,24 +14,24 @@ module Prawn
 
       private
 
-      def colored_box(doc, box_text, options={})
+      def colored_box(doc, box_text, options = {})
         options = {
           fill_color: DARK_GRAY,
           stroke_color: nil,
           text_color: LIGHT_GRAY,
-          leading: LEADING
+          leading: LEADING,
         }.merge(options)
 
         text_options = {
           leading: options[:leading],
-          fallback_fonts: ["DejaVu", "Jigmo", "Jigmo2", "Jigmo3"]
+          fallback_fonts: %w[DejaVu Jigmo Jigmo2 Jigmo3],
         }
 
         box_height = 0
 
         doc.bounding_box(
           [INNER_MARGIN + RHYTHM, doc.cursor],
-          width: doc.bounds.width - (INNER_MARGIN + RHYTHM) * 2
+          width: doc.bounds.width - ((INNER_MARGIN + RHYTHM) * 2),
         ) do
           box_height = doc.height_of_formatted(box_text, text_options)
         end
@@ -43,17 +43,17 @@ module Prawn
 
         doc.bounding_box(
           [INNER_MARGIN + RHYTHM, doc.cursor],
-          width: doc.bounds.width - (INNER_MARGIN + RHYTHM) * 2
+          width: doc.bounds.width - ((INNER_MARGIN + RHYTHM) * 2),
         ) do
           box_height = doc.height_of_formatted(box_text, text_options)
 
           doc.fill_color(options[:fill_color])
           doc.stroke_color(options[:stroke_color] || options[:fill_color])
           doc.fill_and_stroke_rounded_rectangle(
-              [doc.bounds.left - RHYTHM, doc.cursor],
-              doc.bounds.left + doc.bounds.right + RHYTHM * 2,
-              box_height + RHYTHM * 2,
-              5
+            [doc.bounds.left - RHYTHM, doc.cursor],
+            doc.bounds.left + doc.bounds.right + (RHYTHM * 2),
+            box_height + (RHYTHM * 2),
+            5,
           )
           doc.fill_color(BLACK)
           doc.stroke_color(BLACK)
@@ -69,7 +69,7 @@ module Prawn
       def inner_box(doc, &block)
         doc.bounding_box(
           [INNER_MARGIN, doc.cursor],
-          width: doc.bounds.width - INNER_MARGIN * 2,
+          width: doc.bounds.width - (INNER_MARGIN * 2),
           &block
         )
       end

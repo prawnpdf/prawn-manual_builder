@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require "prawn/manual_builder"
+require 'prawn/manual_builder'
 
 Prawn::ManualBuilder::Chapter.new do
-  title "Hello"
+  title 'Hello'
 
   text do
-    prose "HOWDY THERE Prawn::ManualBuilder!!!!!"#, :size => 36, :color => "0000ff"
+    prose 'HOWDY THERE Prawn::ManualBuilder!!!!!' # , :size => 36, :color => "0000ff"
   end
 
   example <<~CODE, eval: false, standalone: false

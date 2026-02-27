@@ -3,7 +3,7 @@
 require 'prism'
 require_relative 'part'
 require_relative 'text_renderer'
-require_relative "syntax_highlight"
+require_relative 'syntax_highlight'
 
 module Prawn
   module ManualBuilder
@@ -14,12 +14,12 @@ module Prawn
         if block
           instance_eval(&block)
         else
-          warn "Chapter defined in #{__FILE__} has no content"
+          warn("Chapter defined in #{__FILE__} has no content")
         end
 
         self.auto_render = true
         at_exit do
-          if self.auto_render
+          if auto_render
             execute_example
           end
         end
@@ -35,10 +35,10 @@ module Prawn
       end
 
       def text(&block)
-        if !block_given?
-          @text
-        else
+        if block_given?
           @text = block
+        else
+          @text
         end
       end
 
@@ -48,11 +48,12 @@ module Prawn
         elsif source != NOT_SET && block_given?
           raise ArgumentError, "Example can't be specified both as a block and as a string"
         else
-          if source != NOT_SET
-            @example = source
-          else
-            @example = block
-          end
+          @example =
+            if source == NOT_SET
+              block
+            else
+              source
+            end
           @example_axes = axes
           @eval_example = eval
           @standalone_example = standalone
@@ -86,13 +87,13 @@ module Prawn
           TextRenderer.new(doc, &text).render
         end
 
+        return unless example
+
         example_source(doc)
 
         if eval_example? && !standalone_example?
           eval_example(doc)
-        end
-
-        unless eval_example?
+        else
           standalone_example(doc)
         end
       end
@@ -111,7 +112,7 @@ module Prawn
           parse_result = Prism.parse(source)
 
           block =
-            Prism::Pattern.new("CallNode[name: :example, block: BlockNode]")
+            Prism::Pattern.new('CallNode[name: :example, block: BlockNode]')
               .scan(parse_result.value)
               .find { |node| node.block.location.start_line == block_source_line }
               &.block
@@ -130,7 +131,7 @@ module Prawn
       end
 
       def chapter_header(doc)
-        raise "Title is not set" unless title
+        raise Error, 'Title is not set' unless title
 
         header_options = {
           leading: 6,
@@ -143,12 +144,10 @@ module Prawn
         if manual.root_path && example
           rel_path = Pathname.new(path).relative_path_from(manual.root_path)
 
-          header_text.concat(
-            [
-              { text: "\n" },
-              { text: "#{rel_path.dirname}/", color: BROWN, font: 'Iosevka', size: HEADER_FONT_SIZE * 0.75 },
-              { text: "#{rel_path.basename}", color: ORANGE, font: 'Iosevka', size: HEADER_FONT_SIZE * 0.75 },
-            ]
+          header_text.push(
+            { text: "\n" },
+            { text: "#{rel_path.dirname}/", color: BROWN, font: 'Iosevka', size: HEADER_FONT_SIZE * 0.75 },
+            { text: rel_path.basename.to_s, color: ORANGE, font: 'Iosevka', size: HEADER_FONT_SIZE * 0.75 },
           )
         end
 
@@ -168,25 +167,26 @@ module Prawn
       def eval_example(doc)
         old_new_page_callback = doc.new_page_callback
         crossed_page = false
-        doc.new_page_callback = lambda do |doc|
-          # Reset bounding box on new page
-          doc.bounds = Prawn::Document::BoundingBox.new(
-            doc,
-            nil,
-            [0, doc.page.dimensions[3]],
-            width: doc.page.dimensions[2],
-            height: doc.page.dimensions[3]
-          )
-          setup_example_area(doc)
-          crossed_page = true
-        end
+        doc.new_page_callback =
+          lambda do |doc|
+            # Reset bounding box on new page
+            doc.bounds = Prawn::Document::BoundingBox.new(
+              doc,
+              nil,
+              [0, doc.page.dimensions[3]],
+              width: doc.page.dimensions[2],
+              height: doc.page.dimensions[3],
+            )
+            setup_example_area(doc)
+            crossed_page = true
+          end
 
         preserving_doc_settings(doc) do
           doc.save_graphics_state do
             doc.bounding_box(
               [-doc.bounds.absolute_left, doc.cursor],
               width: doc.page.dimensions[2],
-              height: doc.y
+              height: doc.y,
             ) do
               doc.start_new_page if new_page_example?
               setup_example_area(doc) unless crossed_page
@@ -197,15 +197,15 @@ module Prawn
                 else
                   doc.instance_eval(example, path)
                 end
-              rescue => e
-                puts "Error evaluating example: #{e.message}"
+              rescue StandardError => e
+                puts("Error evaluating example: #{e.message}")
                 puts
-                puts "---- Source: ----"
+                puts('---- Source: ----')
                 puts
-                puts example
+                puts(example)
                 puts
-                puts "---- Backtrace: ----"
-                puts e.backtrace
+                puts('---- Backtrace: ----')
+                puts(e.backtrace)
               end
             end
           end
@@ -221,22 +221,26 @@ module Prawn
           doc.stroke_color(GRAY)
           doc.line_width(line_width)
 
-          doc.stroke_rectangle([line_width / 2, doc.bounds.top - line_width / 2], doc.bounds.width - line_width, doc.bounds.height - line_width)
+          doc.stroke_rectangle(
+            [line_width / 2, doc.bounds.top - (line_width / 2)], doc.bounds.width - line_width,
+            doc.bounds.height - line_width,
+          )
 
-          # We're reseting fonts for the example so we have to add it again
+          # We're resetting fonts for the example so we have to add it again
           example_title_font = '_ManualExampleTitle'
           doc.font_families.update(
             example_title_font => {
               normal: "#{Prawn::ManualBuilder::DATADIR}/fonts/DejaVuSans-Bold.ttf",
               bold: "#{Prawn::ManualBuilder::DATADIR}/fonts/DejaVuSans-Bold.ttf",
-            })
+            },
+          )
           example_title = 'Example Output'
-          text = [{text: example_title, font: example_title_font, size: text_size, styles: [:bold], color: 'ffffff'}]
+          text = [{ text: example_title, font: example_title_font, size: text_size, styles: [:bold], color: 'ffffff' }]
           h = doc.height_of_formatted(text, { final_gap: false })
 
           doc.bounding_box(
-            [line_width, doc.bounds.top - (line_width - h) / 2 * 1.25],
-            width: doc.bounds.width - line_width * 2
+            [line_width, doc.bounds.top - ((line_width - h) / 2 * 1.25)],
+            width: doc.bounds.width - (line_width * 2),
           ) do
             doc.formatted_text(text, align: :right)
           end
@@ -246,48 +250,52 @@ module Prawn
           doc,
           doc.bounds,
           [PAGE_MARGIN, doc.bounds.top - PAGE_MARGIN],
-          width: doc.bounds.width - PAGE_MARGIN * 2,
-          height: doc.bounds.height - PAGE_MARGIN * 2
-          )
+          width: doc.bounds.width - (PAGE_MARGIN * 2),
+          height: doc.bounds.height - (PAGE_MARGIN * 2),
+        )
         doc.move_cursor_to(doc.bounds.height)
 
         doc.stroke_axis if example_axes?
       end
 
       # Used to generate the url for the example files
-      MANUAL_URL = "https://github.com/prawnpdf/prawn/tree/master/manual"
-
+      MANUAL_URL = 'https://github.com/prawnpdf/prawn/tree/master/manual'
+      private_constant :MANUAL_URL
 
       # Renders a box with the link for the example file
       def standalone_example(doc)
         url = "#{MANUAL_URL}/#{Pathname(path).relative_path_from(manual.root_path)}"
 
         reason = [
-          { text: "This code snippet was not evaluated inline. "\
-                  "You may see its output by running the "\
-                  "example file located here:\n",
-            color: DARK_GRAY, font: 'DejaVu', size: 11 },
-          { text: url.gsub('/', "/#{Prawn::Text::ZWSP}"), color: BLUE, link: url, font: 'DejaVu', size: 11 }
+          {
+            text: 'This code snippet was not evaluated inline. ' \
+              'You may see its output by running the ' \
+              "example file located here:\n",
+            color: DARK_GRAY,
+            font: 'DejaVu',
+            size: 11,
+          },
+          { text: url.gsub('/', "/#{Prawn::Text::ZWSP}"), color: BLUE, link: url, font: 'DejaVu', size: 11 },
         ]
 
         colored_box(
           doc, reason,
           fill_color: LIGHT_GOLD,
           stroke_color: DARK_GOLD,
-          leading: LEADING * 3
+          leading: LEADING * 3,
         )
       end
 
       def execute_example
         if standalone_example?
-          if self.example.is_a?(String)
-            eval(example, TOPLEVEL_BINDING)
+          if example.is_a?(String)
+            TOPLEVEL_BINDING.eval(example)
           else
             Object.new.instance_eval(&example)
           end
         else
-          Prawn::Document.generate("example.pdf") do |doc|
-            if self.example.is_a?(String)
+          Prawn::Document.generate('example.pdf') do |doc|
+            if example.is_a?(String)
               doc.instance_eval(example, path)
             else
               doc.instance_eval(&example)

@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require "prawn/manual_builder"
+require 'prawn/manual_builder'
 
 Prawn::ManualBuilder::Chapter.new do
-  title "Standalone Example"
+  title 'Standalone Example'
 
   text do
-    prose "This is a standalone example."
+    prose 'This is a standalone example.'
   end
 
   example standalone: true do
-    puts "A standalone example"
+    puts 'A standalone example'
   end
 end
