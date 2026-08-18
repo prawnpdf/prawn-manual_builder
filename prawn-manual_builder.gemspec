@@ -10,6 +10,7 @@ Gem::Specification.new do |spec|
   spec.description = 'A tool for writing manuals for Prawn and Prawn accessories'
   spec.licenses = %w[Nonstandard GPL-2.0-only GPL-3.0-only]
 
+  spec.homepage = 'https://prawnpdf.org/'
   spec.authors = ['Alexander Mankuta']
   spec.email = ['alex@pointless.one']
   spec.metadata = {
